@@ -16,7 +16,7 @@ export class PostController {
     post.id = uuid();
     post.title = postData.title;
     post.content = postData.content;
-    post.createDate = new Date();
+    post.createdAt = new Date();
 
     this.postRepository.createPost(post);
     return {
