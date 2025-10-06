@@ -1,29 +1,54 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { UserRepository } from './user.repository.js';
-import { CreateUserDto } from './dto/create-user.dto.js';
-import { UserEntity } from './user.entity.js';
-import { v4 as uuid } from 'uuid';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UserEntity } from '../entities/user.entity';
+import UserProfile from '../enum/user-profile-enum';
+import { UserService } from './user.service';
+import { EditUserDto } from './dto/edit-user.dto';
 
 @Controller('/users')
 export class UserController {
-  constructor(private userRepository: UserRepository) {}
+  constructor(private userService: UserService) {}
 
   @Post()
-  createUser(@Body() userData: CreateUserDto) {
+  async createUser(@Body() userData: CreateUserDto) {
     const user = new UserEntity();
-    user.id = uuid();
     user.username = userData.username;
     user.email = userData.email;
     user.password = userData.password;
+    user.profile = userData.profile;
 
-    this.userRepository.createUser(user);
+    if (!Object.values(UserProfile).includes(userData.profile)) {
+      throw new Error('Invalid user profile');
+    }
+
+    const createdUser = await this.userService.createUser(user);
+
     return {
       message: 'User created successfully',
+      user: createdUser,
     };
   }
 
   @Get()
-  getUsers() {
-    return this.userRepository.getUsers();
+  async getUsers() {
+    return this.userService.listUsers();
+  }
+
+  @Patch('/:id')
+  async editUser(@Param('id') id: string, @Body() userData: EditUserDto) {
+    const editedUser = await this.userService.editUser(id, userData);
+    return {
+      message: 'User edited successfully',
+      post: editedUser,
+    };
+  }
+
+  @Delete('/:id')
+  async deleteUser(@Param('id') id: string) {
+    const deletedUser = await this.userService.deleteUser(id);
+    return {
+      message: 'User deleted successfully',
+      post: deletedUser,
+    };
   }
 }

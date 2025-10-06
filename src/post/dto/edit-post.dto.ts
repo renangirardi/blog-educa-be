@@ -1,11 +1,14 @@
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { IsOptional } from 'class-validator';
 
 export class EditPostDto {
-  @IsNotEmpty()
   @IsOptional()
   title: string;
 
-  @IsNotEmpty()
   @IsOptional()
   content: string;
+
+  constructor(title: string, content: string) {
+    this.title = title;
+    this.content = content;
+  }
 }

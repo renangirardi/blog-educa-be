@@ -10,7 +10,7 @@ import {
 @Entity({ name: 'posts' })
 export class PostEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ name: 'title', length: 100, nullable: false })
   title: string;
@@ -19,11 +19,11 @@ export class PostEntity {
   content: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: Date;
+  deletedAt!: Date;
 }

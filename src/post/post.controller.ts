@@ -1,24 +1,22 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { PostRepository } from './post.repository.js';
-import { CreatePostDto } from './dto/create-post.dto.js';
-import { PostEntity } from './post.entity.js';
-import { ListPostsDto } from './dto/list-posts.dto.js';
-import { EditPostDto } from './dto/edit-post.dto.js';
-import { v4 as uuid } from 'uuid';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { CreatePostDto } from './dto/create-post.dto';
+import { PostEntity } from '../entities/post.entity';
+import { ListPostsDto } from './dto/list-posts.dto';
+import { EditPostDto } from './dto/edit-post.dto';
+import { PostService } from './post.service';
 
 @Controller('/posts')
 export class PostController {
-  constructor(private postRepository: PostRepository) {}
+  constructor(private postService: PostService) {}
 
   @Post()
-  createPost(@Body() postData: CreatePostDto) {
+  async createPost(@Body() postData: CreatePostDto) {
     const post = new PostEntity();
-    post.id = uuid();
     post.title = postData.title;
     post.content = postData.content;
-    post.createdAt = new Date();
 
-    this.postRepository.createPost(post);
+    await this.postService.createPost(post);
+
     return {
       message: 'Post created successfully',
       post: new ListPostsDto(post.id, post.title, post.content),
@@ -26,24 +24,35 @@ export class PostController {
   }
 
   @Get()
-  async getPosts() {
-    const savedPosts = await this.postRepository.getPosts();
-    const postsList = savedPosts.map((post) => new ListPostsDto(post.id, post.title, post.content));
-    return postsList;
+  async listPosts() {
+    const savedPosts = await this.postService.listPosts();
+    return savedPosts;
   }
 
-  @Patch('/:id')
+  @Get('/:id')
+  async readPost(@Param('id') id: string) {
+    const post = await this.postService.readPost(id);
+    return post;
+  }
+
+  @Get('/search/:query')
+  async searchPost(@Param('query') query: string) {
+    const searchRestult = await this.postService.searchPost(query);
+    return searchRestult;
+  }
+
+  @Put('/:id')
   async editPost(@Param('id') id: string, @Body() postData: EditPostDto) {
-    const editedPost = await this.postRepository.editPost(id, postData);
+    const editedPost = await this.postService.editPost(id, postData);
     return {
       message: 'Post edited successfully',
-      post: new ListPostsDto(editedPost.id, editedPost.title, editedPost.content),
+      post: editedPost,
     };
   }
 
   @Delete('/:id')
   async deletePost(@Param('id') id: string) {
-    const deletedPost = await this.postRepository.deletePost(id);
+    const deletedPost = await this.postService.deletePost(id);
     return {
       message: 'Post deleted successfully',
       post: deletedPost,
