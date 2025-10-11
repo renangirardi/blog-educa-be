@@ -1,44 +1,39 @@
-name: CI / CD (tests in containers + deploy to Render)
+name: CI - Run Tests
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: ['**']
+    branches: [main, develop]
 
 jobs:
-  build_and_test:
+  test:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
+      # 1️⃣ Clona o código do repositório
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx (ensures docker compose/build works)
-        uses: docker/setup-buildx-action@v3
-
-      - name: Run tests via docker compose
+      # 2️⃣ Instala o Docker Compose (já vem com o runner, mas garantimos a versão estável)
+      - name: Set up Docker Compose
         run: |
-          # sobe db + app (app vai esperar o DB e rodar os testes)
+          sudo apt-get update
+          sudo apt-get install docker-compose-plugin -y
+
+      # 3️⃣ Constrói e executa os containers definidos em docker-compose.test.yml
+      - name: Build and run tests
+        run: |
           docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
-        # Se os testes falharem esse passo retorna non-zero e a job para aqui (o deploy não será acionado)
 
-      - name: Tear down compose (always)
-        if: always()
-        run: docker compose -f docker-compose.test.yml down --volumes --remove-orphans
-
-  deploy:
-    needs: build_and_test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && needs.build_and_test.result == 'success'
-    steps:
-      - name: Trigger Render deploy hook
-        env:
-          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+      # 4️⃣ Exibe os logs (caso ocorra algum erro)
+      - name: Show logs on failure
+        if: failure()
         run: |
-          if [ -z "$RENDER_DEPLOY_HOOK" ]; then
-            echo "RENDER_DEPLOY_HOOK is not set - skipping deploy"
-            exit 1
-          fi
-          echo "Calling Render deploy hook..."
-          # POST simples para o webhook do Render
-          curl -X POST --fail "$RENDER_DEPLOY_HOOK"
+          docker compose -f docker-compose.test.yml logs
+
+      # 5️⃣ Limpa containers e imagens após a execução
+      - name: Cleanup
+        if: always()
+        run: |
+          docker compose -f docker-compose.test.yml down -v
