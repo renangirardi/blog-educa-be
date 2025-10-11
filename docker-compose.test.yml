@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test_db
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U test -d test_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+          tmpfs:
+      - /var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      target: dev-test
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: test
+      DB_PASSWORD: test
+      DB_NAME: test_db
+      NODE_ENV: test
+    command: >
+      sh -c "
+      for i in \$(seq 1 30); do
+        pg_isready -h db -U test && break || echo 'waiting for db' && sleep 1;
+      done;
+      npm ci;
+      npm run test -- --runInBand --detectOpenHandles
+      "
