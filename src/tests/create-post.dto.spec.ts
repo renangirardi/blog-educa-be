@@ -16,8 +16,6 @@ describe('CreatePostDto', () => {
     expect(errors.some((e) => e.property === 'title')).toBe(true);
   });
 
-  //comentartio teste
-
   it('should fail validation when content is an empty string', async () => {
     const dto = new CreatePostDto(mockValidPost.title, '');
     const errors = await validate(dto);
