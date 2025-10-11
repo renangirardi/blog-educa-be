@@ -11,29 +11,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Clona o código do repositório
-      - name: Checkout code
+      - name: Checkout do código
         uses: actions/checkout@v4
 
-      # 2️⃣ Instala o Docker Compose (já vem com o runner, mas garantimos a versão estável)
-      - name: Set up Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install docker-compose-plugin -y
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-      # 3️⃣ Constrói e executa os containers definidos em docker-compose.test.yml
-      - name: Build and run tests
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Verificar versão do Docker e Compose
+        run: |
+          docker --version
+          docker compose version
+
+      - name: Build e execução dos testes com docker-compose
         run: |
           docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
-
-      # 4️⃣ Exibe os logs (caso ocorra algum erro)
-      - name: Show logs on failure
-        if: failure()
-        run: |
-          docker compose -f docker-compose.test.yml logs
-
-      # 5️⃣ Limpa containers e imagens após a execução
-      - name: Cleanup
-        if: always()
-        run: |
-          docker compose -f docker-compose.test.yml down -v
