@@ -184,6 +184,16 @@ da verdade para o ambiente de desenvolvimento.
     arquivo .env. Estes valores serão lidos pelo Docker Compose para
     configurar os contêineres.
 
+```
+PORT=3000
+NODE_ENV=development
+DB_HOST=db
+DB_PORT=5432
+DB_USERNAME=test
+DB_PASSWORD=test
+DB_NAME=test_db
+```
+
 ## 3.4. Executando o Ambiente de Desenvolvimento
 
 Com o arquivo .env configurado, você pode iniciar todo o ambiente
@@ -246,6 +256,20 @@ Recupera uma lista com todas as postagens criadas.
 - **Corpo da Requisição:** Nenhum.
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+```
+[
+    {
+        "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+        "title": "Introdução ao NestJS",
+        "content": "Um guia completo para iniciar com o framework..."
+    },
+    {
+        "id": "f0e9d8c7-b6a5-4321-fedc-ba9876543210",
+        "title": "Boas Práticas com Docker",
+        "content": "Como otimizar seus Dockerfiles e ambientes..."
+    }
+]
+```
 
 ## Criar uma Nova Postagem
 
@@ -258,11 +282,24 @@ fornecidos.
 
 - **Corpo da Requisição:**
 
-```{=html}
-<!-- -->
+```
+{
+    "title": "Dominando o TypeORM",
+    "content": "Este post aborda as principais funcionalidades e padrões de uso do TypeORM com NestJS e PostgreSQL."
+}
 ```
 
 - **Exemplo de Resposta de Sucesso (201 Created):**
+```
+{
+    "message": "Post created successfully",
+    "post": {
+        "id": "1a2b3c4d-5e6f-7890-abcd-ef1234567890",
+        "title": "Dominando o TypeORM",
+        "content": "Este post aborda as principais funcionalidades e padrões de uso do TypeORM com NestJS e PostgreSQL."
+    }
+}
+```
 
 ### Ler uma Postagem Específica
 
@@ -277,6 +314,13 @@ Busca e retorna uma postagem específica pelo seu ID.
   - id (string, obrigatório): O ID da postagem a ser recuperada.
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+```
+{
+    "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+    "title": "Introdução ao NestJS",
+    "content": "Um guia completo para iniciar com o framework..."
+}
+```
 
 - **Resposta de Erro (404 Not Found):** Retornada se nenhuma postagem
   for encontrada com o ID fornecido.
@@ -295,6 +339,15 @@ conteúdo.
   - query (string, obrigatório): O termo a ser buscado.
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+```
+[
+    {
+        "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+        "title": "Introdução ao NestJS",
+        "content": "Um guia completo para iniciar com o framework..."
+    }
+]
+```
 
 ### Editar uma Postagem Existente
 
@@ -309,8 +362,23 @@ Atualiza o título e/ou o conteúdo de uma postagem existente.
   - id (string, obrigatório): O ID da postagem a ser editada.
 
 - **Corpo da Requisição (parcial ou completo):**
+```
+{
+    "title": "Introdução Avançada ao NestJS"
+}
+```
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+```
+{
+    "message": "Post deleted successfully",
+    "post": {
+        "id": "f0e9d8c7-b6a5-4321-fedc-ba9876543210",
+        "title": "Boas Práticas com Docker",
+        "content": "Como otimizar seus Dockerfiles e ambientes..."
+    }
+}
+```
 
 ### Excluir uma Postagem
 
@@ -325,6 +393,16 @@ Remove uma postagem específica do banco de dados.
   - id (string, obrigatório): O ID da postagem a ser excluída.
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+```
+{
+    "message": "Post deleted successfully",
+    "post": {
+        "id": "f0e9d8c7-b6a5-4321-fedc-ba9876543210",
+        "title": "Boas Práticas com Docker",
+        "content": "Como otimizar seus Dockerfiles e ambientes..."
+    }
+}
+```
 
 ## 4.2. Endpoints de Usuários (/users)
 
@@ -339,8 +417,27 @@ Registra um novo usuário no sistema.
 - **Endpoint:** /users
 
 - **Corpo da Requisição:**
+```
+{
+    "username": "joao.silva",
+    "email": "joao.silva@example.com",
+    "password": "senhaForte123",
+    "profile": "student"
+}
+```
 
 - **Exemplo de Resposta de Sucesso (201 Created):**
+```
+{
+    "message": "User created successfully",
+    "user": {
+        "id": "uuid-do-usuario-123",
+        "username": "joao.silva",
+        "email": "joao.silva@example.com",
+        "profile": "student"
+    }
+}
+```
 
 - **Resposta de Erro (400 Bad Request):** Retornada se os dados de
   entrada forem inválidos (ex: e-mail em formato incorreto, senha
@@ -355,6 +452,20 @@ Recupera uma lista com todos os usuários cadastrados.
 - **Endpoint:** /users
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+```
+[
+    {
+        "id": "uuid-do-usuario-123",
+        "username": "joao.silva",
+        "profile": "student"
+    },
+    {
+        "id": "uuid-do-usuario-456",
+        "username": "maria.professora",
+        "profile": "teacher"
+    }
+]
+```
 
 ### Editar um Usuário Existente
 
@@ -369,8 +480,24 @@ Atualiza os dados de um usuário (nome, e-mail ou perfil).
   - id (string, obrigatório): O ID do usuário a ser editado.
 
 - **Corpo da Requisição (parcial):**
+```
+{
+    "email": "joao.silva.novo@example.com"
+}
+```
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+```
+{
+    "message": "User edited successfully",
+    "user": {
+        "id": "uuid-do-usuario-123",
+        "username": "joao.silva",
+        "email": "joao.silva.novo@example.com",
+        "profile": "student"
+    }
+}
+```
 
 ### Excluir um Usuário
 
@@ -385,6 +512,17 @@ Remove um usuário específico do sistema.
   - id (string, obrigatório): O ID do usuário a ser excluído.
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+```
+{
+    "message": "User deleted successfully",
+    "user": {
+        "id": "uuid-do-usuario-123",
+        "username": "joao.silva",
+        "email": "joao.silva.novo@example.com",
+        "profile": "student"
+    }
+}
+```
 
 # 5. Qualidade de Código e Automação
 
