@@ -8,7 +8,7 @@ title: Tech Challenge -- Fase 2
 
 # 1. Introdução
 
-# Este documento detalha a arquitetura, implementação e uso da aplicação de blogging desenvolvida como parte do Tech Challenge - Fase 02. O projeto visa fornecer uma solução tecnológica para um problema recorrente na educação pública, utilizando um backend robusto e escalável construído com Node.js.
+Este documento detalha a arquitetura, implementação e uso da aplicação de blogging desenvolvida como parte do Tech Challenge - Fase 02. O projeto visa fornecer uma solução tecnológica para um problema recorrente na educação pública, utilizando um backend robusto e escalável construído com Node.js.
 
 ## 1.1. O Problema
 
@@ -86,6 +86,7 @@ a configuração e a execução do projeto.
 O projeto está organizado na seguinte estrutura de diretórios para
 manter uma separação clara de responsabilidades:
 
+```
 .
 ├── .github
 │ └── workflows
@@ -101,6 +102,7 @@ manter uma separação clara de responsabilidades:
 │ └── user
 │ └── dto
 └── test
+```
 
 ## 2.4. Modelagem de Dados
 
