@@ -1,0 +1,44 @@
+# docker-compose.yml (MELHORADO)
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: postgres_db_dev
+    restart: always
+    # As variáveis de ambiente para o contêiner do Postgres
+    # são lidas diretamente do seu arquivo .env
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432" # Usa a variável para flexibilidade
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USERNAME} -d ${DB_NAME}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      target: dev-test
+    container_name: nest_app_dev
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${PORT}:3000" # Usa a variável do .env
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./node_modules:/usr/src/app/node_modules # Opcional, mas pode evitar problemas
+    # Carrega TODAS as variáveis do .env para dentro do contêiner
+    env_file:
+      - .env
+    command: npm run start:dev
+
+volumes:
+  postgres_data:

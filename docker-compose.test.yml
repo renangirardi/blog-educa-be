@@ -1,7 +1,9 @@
+# docker-compose.test.yml (MELHORADO)
 services:
   db:
     image: postgres:15
     environment:
+      # Valores fixos para o ambiente de teste
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
       POSTGRES_DB: test_db
@@ -18,8 +20,10 @@ services:
       context: .
       target: dev-test
     depends_on:
-      - db
+      db:
+        condition: service_healthy # Condição melhorada
     environment:
+      # Variáveis explícitas para o ambiente de teste isolado
       DB_HOST: db
       DB_PORT: 5432
       DB_USERNAME: test
@@ -28,9 +32,8 @@ services:
       NODE_ENV: test
     command: >
       sh -c "
-      for i in \$(seq 1 30); do
-        pg_isready -h db -U test && break || echo 'waiting for db' && sleep 1;
-      done;
-      npm ci;
-      npm run test -- --runInBand --detectOpenHandles
+        echo 'Waiting for database...'
+        # O healthcheck já garante que o DB está pronto, o loop é uma segurança extra.
+        npm ci
+        npm run test -- --runInBand --detectOpenHandles
       "
