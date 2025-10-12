@@ -1,9 +1,9 @@
 ---
-subtitle: |
+Identificação: |
   Aluno: Renan Girardi Freitas\
   RM: 365950\
   Turma: 6FSDT
-title: Tech Challenge -- Fase 2
+Projeto: Tech Challenge -- Fase 2
 ---
 
 # 1. Introdução
