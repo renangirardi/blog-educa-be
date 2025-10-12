@@ -1,9 +1,7 @@
-# docker-compose.test.yml (MELHORADO)
 services:
   db:
     image: postgres:15
     environment:
-      # Valores fixos para o ambiente de teste
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
       POSTGRES_DB: test_db
@@ -21,9 +19,8 @@ services:
       target: dev-test
     depends_on:
       db:
-        condition: service_healthy # Condição melhorada
+        condition: service_healthy
     environment:
-      # Variáveis explícitas para o ambiente de teste isolado
       DB_HOST: db
       DB_PORT: 5432
       DB_USERNAME: test
