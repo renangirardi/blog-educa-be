@@ -20,6 +20,4 @@ export class CreateUserDto {
     this.password = password;
     this.profile = profile;
   }
-
-  //Comentário
 }
