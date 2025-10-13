@@ -30,7 +30,6 @@ services:
     command: >
       sh -c "
         echo 'Waiting for database...'
-        # O healthcheck já garante que o DB está pronto, o loop é uma segurança extra.
         npm ci
         npm run test -- --runInBand --detectOpenHandles
       "
