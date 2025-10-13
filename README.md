@@ -371,11 +371,11 @@ Atualiza o título e/ou o conteúdo de uma postagem existente.
 - **Exemplo de Resposta de Sucesso (200 OK):**
 ```
 {
-    "message": "Post deleted successfully",
+    "message": "Post edited successfully",
     "post": {
-        "id": "f0e9d8c7-b6a5-4321-fedc-ba9876543210",
-        "title": "Boas Práticas com Docker",
-        "content": "Como otimizar seus Dockerfiles e ambientes..."
+        "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+        "title": "Introdução Avançada ao NestJS",
+        "content": "Um guia completo para iniciar com o framework..."
     }
 }
 ```
