@@ -6,6 +6,10 @@ Identificação: |
 Projeto: Tech Challenge -- Fase 2
 ---
 
+# 0. Vídeo de Apresentação
+
+https://youtu.be/Gj_mxscKBcc?si=wfDyj4n8tS6GsjVW
+
 # 1. Introdução
 
 Este documento detalha a arquitetura, implementação e uso da aplicação de blogging desenvolvida como parte do Tech Challenge - Fase 02. O projeto visa fornecer uma solução tecnológica para um problema recorrente na educação pública, utilizando um backend robusto e escalável construído com Node.js.
@@ -110,7 +114,6 @@ A aplicação utiliza duas entidades principais para a modelagem dos
 dados, gerenciadas pelo TypeORM:
 
 - **UserEntity:** Representa os usuários do sistema.
-
   - **id:** Identificador único (UUID) gerado automaticamente.
 
   - **username:** Nome do usuário (string, obrigatório).
@@ -126,7 +129,6 @@ dados, gerenciadas pelo TypeORM:
     controle de registros.
 
 - **PostEntity:** Representa as postagens criadas pelos professores.
-
   - **id:** Identificador único (UUID) gerado automaticamente.
 
   - **title:** Título da postagem (string, obrigatório).
@@ -256,6 +258,7 @@ Recupera uma lista com todas as postagens criadas.
 - **Corpo da Requisição:** Nenhum.
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+
 ```
 [
     {
@@ -290,6 +293,7 @@ fornecidos.
 ```
 
 - **Exemplo de Resposta de Sucesso (201 Created):**
+
 ```
 {
     "message": "Post created successfully",
@@ -310,10 +314,10 @@ Busca e retorna uma postagem específica pelo seu ID.
 - **Endpoint:** /posts/:id
 
 - **Parâmetros de Rota:**
-
   - id (string, obrigatório): O ID da postagem a ser recuperada.
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+
 ```
 {
     "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
@@ -335,10 +339,10 @@ conteúdo.
 - **Endpoint:** /posts/search/:query
 
 - **Parâmetros de Rota:**
-
   - query (string, obrigatório): O termo a ser buscado.
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+
 ```
 [
     {
@@ -358,10 +362,10 @@ Atualiza o título e/ou o conteúdo de uma postagem existente.
 - **Endpoint:** /posts/:id
 
 - **Parâmetros de Rota:**
-
   - id (string, obrigatório): O ID da postagem a ser editada.
 
 - **Corpo da Requisição (parcial ou completo):**
+
 ```
 {
     "title": "Introdução Avançada ao NestJS"
@@ -369,6 +373,7 @@ Atualiza o título e/ou o conteúdo de uma postagem existente.
 ```
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+
 ```
 {
     "message": "Post edited successfully",
@@ -389,10 +394,10 @@ Remove uma postagem específica do banco de dados.
 - **Endpoint:** /posts/:id
 
 - **Parâmetros de Rota:**
-
   - id (string, obrigatório): O ID da postagem a ser excluída.
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+
 ```
 {
     "message": "Post deleted successfully",
@@ -417,6 +422,7 @@ Registra um novo usuário no sistema.
 - **Endpoint:** /users
 
 - **Corpo da Requisição:**
+
 ```
 {
     "username": "joao.silva",
@@ -427,6 +433,7 @@ Registra um novo usuário no sistema.
 ```
 
 - **Exemplo de Resposta de Sucesso (201 Created):**
+
 ```
 {
     "message": "User created successfully",
@@ -452,6 +459,7 @@ Recupera uma lista com todos os usuários cadastrados.
 - **Endpoint:** /users
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+
 ```
 [
     {
@@ -476,10 +484,10 @@ Atualiza os dados de um usuário (nome, e-mail ou perfil).
 - **Endpoint:** /users/:id
 
 - **Parâmetros de Rota:**
-
   - id (string, obrigatório): O ID do usuário a ser editado.
 
 - **Corpo da Requisição (parcial):**
+
 ```
 {
     "email": "joao.silva.novo@example.com"
@@ -487,6 +495,7 @@ Atualiza os dados de um usuário (nome, e-mail ou perfil).
 ```
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+
 ```
 {
     "message": "User edited successfully",
@@ -508,10 +517,10 @@ Remove um usuário específico do sistema.
 - **Endpoint:** /users/:id
 
 - **Parâmetros de Rota:**
-
   - id (string, obrigatório): O ID do usuário a ser excluído.
 
 - **Exemplo de Resposta de Sucesso (200 OK):**
+
 ```
 {
     "message": "User deleted successfully",
