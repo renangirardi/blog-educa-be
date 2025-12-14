@@ -1,10 +1,12 @@
-import { IsOptional } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class EditPostDto {
   @IsOptional()
+  @IsString()
   title: string;
 
   @IsOptional()
+  @IsString()
   content: string;
 
   constructor(title: string, content: string) {
