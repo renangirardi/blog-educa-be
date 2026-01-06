@@ -10,7 +10,7 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type, Accept',
 
     // Opcional: Se você estiver usando cookies ou autenticação
-    // credentials: true,
+    credentials: true,
   });
   app.useGlobalPipes(
     new ValidationPipe({

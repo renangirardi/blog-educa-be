@@ -14,12 +14,13 @@ export class PostController {
     const post = new PostEntity();
     post.title = postData.title;
     post.content = postData.content;
+    post.author = postData.author;
 
     await this.postService.createPost(post);
 
     return {
       message: 'Post created successfully',
-      post: new ListPostsDto(post.id, post.title, post.content),
+      post: new ListPostsDto(post.id, post.title, post.content, post.author),
     };
   }
 

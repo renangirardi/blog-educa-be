@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreatePostDto {
   @IsNotEmpty()
@@ -7,8 +7,13 @@ export class CreatePostDto {
   @IsNotEmpty()
   content: string;
 
-  constructor(title: string, content: string) {
+  @IsNotEmpty()
+  @IsOptional()
+  author: string;
+
+  constructor(title: string, content: string, author: string) {
     this.title = title;
     this.content = content;
+    this.author = author;
   }
 }

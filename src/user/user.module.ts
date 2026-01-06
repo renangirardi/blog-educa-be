@@ -10,5 +10,6 @@ import { PostModule } from '../post/post.module';
   imports: [TypeOrmModule.forFeature([UserEntity, PostEntity]), forwardRef(() => PostModule)],
   controllers: [UserController],
   providers: [UserService],
+  exports: [UserService],
 })
 export class UserModule {}

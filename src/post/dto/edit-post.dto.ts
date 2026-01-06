@@ -9,8 +9,13 @@ export class EditPostDto {
   @IsString()
   content: string;
 
-  constructor(title: string, content: string) {
+  @IsOptional()
+  @IsString()
+  author: string;
+
+  constructor(title: string, content: string, author: string) {
     this.title = title;
     this.content = content;
+    this.author = author;
   }
 }

@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PostgresConfigService } from './config/postgres.config.service.js';
 import { UserModule } from './user/user.module.js';
 import { PostModule } from './post/post.module.js';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PostModule } from './post/post.module.js';
       useClass: PostgresConfigService,
       inject: [PostgresConfigService],
     }),
+    AuthModule,
   ],
 })
 export class AppModule {}

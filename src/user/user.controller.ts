@@ -34,6 +34,12 @@ export class UserController {
     return this.userService.listUsers();
   }
 
+  @Get('/:id')
+  async getUserById(@Param('id') id: string) {
+    const user = await this.userService.findById(id);
+    return user;
+  }
+
   @Patch('/:id')
   async editUser(@Param('id') id: string, @Body() userData: EditUserDto) {
     const editedUser = await this.userService.editUser(id, userData);

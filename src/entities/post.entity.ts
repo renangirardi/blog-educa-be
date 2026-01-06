@@ -18,6 +18,9 @@ export class PostEntity {
   @Column({ name: 'content', length: 2048, nullable: false })
   content: string;
 
+  @Column({ name: 'author', nullable: true })
+  author: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 

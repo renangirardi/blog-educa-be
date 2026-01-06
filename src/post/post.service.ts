@@ -18,7 +18,9 @@ export class PostService {
 
   async listPosts() {
     const posts = await this.postRepository.find();
-    const postsList = posts.map((post) => new ListPostsDto(post.id, post.title, post.content));
+    const postsList = posts.map(
+      (post) => new ListPostsDto(post.id, post.title, post.content, post.author),
+    );
 
     return postsList;
   }
@@ -33,7 +35,7 @@ export class PostService {
       where: [{ title: ILike(`%${query}%`) }, { content: ILike(`%${query}%`) }],
     });
 
-    return posts.map((post) => new ListPostsDto(post.id, post.title, post.content));
+    return posts.map((post) => new ListPostsDto(post.id, post.title, post.content, post.author));
   }
 
   async editPost(id: string, postDto: EditPostDto) {
