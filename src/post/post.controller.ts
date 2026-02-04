@@ -1,15 +1,22 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostEntity } from '../entities/post.entity';
 import { ListPostsDto } from './dto/list-posts.dto';
 import { EditPostDto } from './dto/edit-post.dto';
 import { PostService } from './post.service';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from 'src/auth/roles.decorator';
+import UserProfile from '../enum/user-profile-enum';
 
 @Controller('/posts')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class PostController {
   constructor(private postService: PostService) {}
 
   @Post()
+  @Roles(UserProfile.teacher, UserProfile.admin)
   async createPost(@Body() postData: CreatePostDto) {
     const post = new PostEntity();
     post.title = postData.title;
@@ -43,6 +50,7 @@ export class PostController {
   }
 
   @Put('/:id')
+  @Roles(UserProfile.teacher, UserProfile.admin)
   async editPost(@Param('id') id: string, @Body() postData: EditPostDto) {
     const editedPost = await this.postService.editPost(id, postData);
     return {
@@ -52,6 +60,7 @@ export class PostController {
   }
 
   @Delete('/:id')
+  @Roles(UserProfile.teacher, UserProfile.admin)
   async deletePost(@Param('id') id: string) {
     const deletedPost = await this.postService.deletePost(id);
     return {

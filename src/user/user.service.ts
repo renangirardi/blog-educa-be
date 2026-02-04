@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { ListUsersDto } from './dto/list-users.dto';
 import { EditUserDto } from './dto/edit-user.dto';
-import * as bcrypt from 'bcrypt'; // <--- 1. Importe o bcrypt
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -14,19 +14,15 @@ export class UserService {
   ) {}
 
   async createUser(userData: UserEntity) {
-    // 2. Gere o "salt" (tempero) da criptografia
     const salt = await bcrypt.genSalt();
 
-    // 3. Crie o Hash da senha
     const passwordHash = await bcrypt.hash(userData.password, salt);
 
-    // 4. Substitua a senha original pelo Hash no objeto que será salvo
     const newUser = this.userRepository.create({
       ...userData,
       password: passwordHash,
     });
 
-    // 5. Salve o usuário com a senha criptografada
     await this.userRepository.save(newUser);
   }
 
@@ -35,6 +31,18 @@ export class UserService {
     const usersList = users.map((user) => new ListUsersDto(user.id, user.username, user.profile));
 
     return usersList;
+  }
+
+  async searchUser(query: string) {
+    const posts = await this.userRepository.find({
+      where: [
+        { username: ILike(`%${query}%`) },
+        { email: ILike(`%${query}%`) },
+        { profile: ILike(`%${query}%`) },
+      ],
+    });
+
+    return posts.map((user) => new ListUsersDto(user.id, user.username, user.profile));
   }
 
   async findByEmail(email: string) {

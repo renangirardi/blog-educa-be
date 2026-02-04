@@ -1,35 +1,46 @@
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private jwtService: JwtService,
+  ) {}
 
   async validateUser(loginDto: LoginDto) {
     const { email, password } = loginDto;
-
-    // 1. Busca o usuário pelo email (Você precisa ter esse método no UsersService)
     const user = await this.userService.findByEmail(email);
 
     if (!user) {
-      throw new UnauthorizedException('Credenciais inválidas');
+      throw new UnauthorizedException('Invalid credentials');
     }
 
-    // 2. Compara a senha enviada com a senha hash do banco
-    // CUIDADO: user.password deve ser o hash salvo no banco
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Credenciais inválidas');
+      throw new UnauthorizedException('Invalid credentials');
     }
 
-    // 3. Retorna o usuário (sem a senha)
-    // Opcional: Aqui você poderia retornar um JWT, mas para seu frontend atual,
-    // retornar o objeto do usuário já basta para criar a sessão no Next.js
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...result } = user; // Remove a senha do retorno
-    return result;
+    return this.login(user);
+  }
+
+  async login(user: any) {
+    const payload = { username: user.username, sub: user.id, profile: user.profile };
+
+    return {
+      access_token: this.jwtService.sign(payload),
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        profile: user.profile,
+      },
+    };
   }
 }

@@ -12,7 +12,7 @@ export class EditUserDto {
 
   @IsNotEmpty()
   @IsOptional()
-  profile: UserProfileEnum;
+  profile?: UserProfileEnum;
 
   constructor(username: string, email: string, profile: UserProfileEnum) {
     this.username = username;
