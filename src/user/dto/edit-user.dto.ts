@@ -12,11 +12,16 @@ export class EditUserDto {
 
   @IsNotEmpty()
   @IsOptional()
+  password?: string;
+
+  @IsNotEmpty()
+  @IsOptional()
   profile?: UserProfileEnum;
 
-  constructor(username: string, email: string, profile: UserProfileEnum) {
+  constructor(username: string, email: string, password: string, profile: UserProfileEnum) {
     this.username = username;
     this.email = email;
+    this.password = password;
     this.profile = profile;
   }
 }

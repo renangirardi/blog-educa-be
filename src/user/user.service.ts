@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { ILike, Repository } from 'typeorm';
@@ -54,7 +54,24 @@ export class UserService {
   }
 
   async editUser(id: string, userDto: EditUserDto) {
+    const user = await this.findById(id); // Verifica se usuario existe
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (userDto.password) {
+      const salt = await bcrypt.genSalt();
+      userDto.password = await bcrypt.hash(userDto.password, salt);
+    }
+
+    if (!userDto.password) {
+      delete userDto.password;
+    }
+
     await this.userRepository.update(id, userDto);
+
+    return this.findById(id);
   }
 
   async deleteUser(id: string) {
